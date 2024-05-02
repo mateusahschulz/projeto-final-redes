@@ -15,7 +15,7 @@ WiFiClient esp32Client;
 PubSubClient clientMQTT(esp32Client);
 
 unsigned long lastTimeChecked = 0;
-const char* topic = "Busca - ";
+const char* topic = "topic/ble/devices";
 const long publishBreak = 20000;
 
 BLEScan* pBLEScan;
@@ -36,7 +36,7 @@ class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
 };
 
 void setup() {
-  const char* mqttBroker = "postman.cloudmqtt.com";
+  const char* mqttBroker = "test.mosquitto.org";
   Serial.begin(115200);
   connectWifi();
   clientMQTT.setServer(mqttBroker, 11458);
@@ -49,10 +49,6 @@ void setup() {
 }
 
 void connectWifi() {
-  /*Serial.println(F("Insira a rede wi-fi que deseja se conectar: "));
-  const char* wifiName = Serial.readString().c_str();
-  Serial.println(F("Insira a senha da rede para conexão: "));
-  const char* wifiPassword = Serial.readString().c_str();*/
   const char* wifiName = "AHSCHULZ.2G";
   const char* wifiPassword = "7082D154";
   WiFi.begin(wifiName, wifiPassword);
@@ -64,9 +60,9 @@ void connectWifi() {
 
 
 void connectMQTT() {
-  const char* ClientID = "ESP32";
-  const char* usuario = "zsaameag";
-  const char* senha = "L9R3_C1ms2Lb";
+  const char* ClientID = "mqtt_trab_final_redes_02_05_2024";
+  const char* usuario = "mqtt_redes";
+  const char* senha = "!T&ste123";
   while (!clientMQTT.connected()) {
     clientMQTT.connect(ClientID, usuario, senha);
     Serial.println(F("Conectado ao MQTT"));
