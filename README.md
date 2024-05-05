@@ -15,10 +15,10 @@ Para rodar o projeto é necessário algumas configurações para que este compil
 <ol>
   <li>Instalar o Arduino IDE e conectar a sua placa ESP32 no computador para que seja feita a instalação das bibliotecas específicas para o chip. Caso ele não identifique a placa, é necessário selecionar manualmente a placa ESP32 Dev Module com a porta conectada</li>
   <li>No menu lateral da esquerda no Arduino IDE, selecionar a terceira opção (Gerenciador de bibliotecas) e pesquisar pela biblioteca "PubSubClient" de Nick O'Leary. Instale-a.
-      ![Config Biblioteca](https://github.com/mateusahschulz/projeto-final-redes/assets/50716715/ce04ca47-8fdf-4d8d-96bf-0779859290d5)
+      ![Config Biblioteca](https://github.com/mateusahschulz/projeto-final-redes/blob/main/assets/Config%20Biblioteca.gif)
   </li>
   <li>Na barra de ferramentas, ir na aba Ferramentas (Tools), procurar pela opção Partition Scheme e dentro desta opção selecionar o valor "Huge App"
-      ![Config HugeApp](https://github.com/mateusahschulz/projeto-final-redes/assets/50716715/b8323d66-bbc5-424d-af15-d3406cc1fb47)
+      ![Config HugeApp](https://github.com/mateusahschulz/projeto-final-redes/blob/main/assets/Config%HugeApp.gif)
   </li>
   <li>Com essas configurações, o projeto deve executar corretamente no Arduino IDE</li>
 </ol>
