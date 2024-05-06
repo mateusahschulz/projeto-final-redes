@@ -22,14 +22,24 @@ BLEScan* pBLEScan;
 
 class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks {
 
-  int referenceRSSI = -69;
+  int referenceRSSI = -69;  
 
-  void onResult(BLEAdvertisedDevice advertisedDevice) {
-    if (advertisedDevice.getRSSI() < referenceRSSI) {
-      Serial.println(advertisedDevice.getRSSI());
+  double calculateDistanceFromRSSI(int deviceRSSI) {
+    int n = 2;  // Variar n de 2 até 3,5 normalmente.
+    int referenceRSSI = -69;
+    double exp = (referenceRSSI - deviceRSSI) / (10.0 * n);
+    return pow(10, exp);
+  }
+
+  void onResult(BLEAdvertisedDevice device) {
+    double deviceDistance = calculateDistanceFromRSSI(device.getRSSI());
+    Serial.println(F((String("Dispositivo: ") + String(device.getAddress().toString().c_str()) + String("\nNome: ") + String(device.getName().c_str()) + String("\nDistância: ") + String(deviceDistance, 4)).c_str()));
+
+    if (device.getRSSI() < referenceRSSI) {
+      // Serial.println(advertisedDevice.getRSSI());
     }
-    if (advertisedDevice.getRSSI() > referenceRSSI) {
-      Serial.println(advertisedDevice.getRSSI());
+    if (device.getRSSI() > referenceRSSI) {
+      // Serial.println(advertisedDevice.getRSSI());
       lastTimeChecked = millis();
     }
   }
@@ -39,7 +49,7 @@ void setup() {
   const char* mqttBroker = "test.mosquitto.org";
   Serial.begin(115200);
   connectWifi();
-  clientMQTT.setServer(mqttBroker, 11458);
+  clientMQTT.setServer(mqttBroker, 1883);
   BLEDevice::init("");
   pBLEScan = BLEDevice::getScan();
   pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
@@ -60,11 +70,11 @@ void connectWifi() {
 
 
 void connectMQTT() {
-  const char* ClientID = "mqtt_trab_final_redes_02_05_2024";
-  const char* usuario = "mqtt_redes";
-  const char* senha = "!T&ste123";
+  // const char* ClientID = "mqtt_trab_final_redes_02_05_2024";
+  // const char* usuario = "mqtt_redes";
+  // const char* senha = "!T&ste123";
   while (!clientMQTT.connected()) {
-    clientMQTT.connect(ClientID, usuario, senha);
+    clientMQTT.connect("");
     Serial.println(F("Conectado ao MQTT"));
   }
 }
@@ -74,41 +84,45 @@ void loop() {
     connectMQTT();
   }
   scanBLE();
+  clientMQTT.loop();
 }
 
 void scanBLE() {
-  int scanTime = 2;
+  int scanTime = 10;
+  // Serial.println(F("Estou na scanBLE"));
   BLEScanResults foundDevices = pBLEScan->start(scanTime);
   int deviceCount = foundDevices.getCount();
+  Serial.println(deviceCount);
   if (deviceCount) {
     publishScanResults(deviceCount);
   }
   for (uint32_t i = 0; i < deviceCount; i++) {
     BLEAdvertisedDevice device = foundDevices.getDevice(i);
     double deviceDistance = calculateDistanceFromRSSI(device.getRSSI());
+    // Serial.println(F((String("Dispositivo: ") + String(device.getAddress().toString().c_str()) + String(device.getName().c_str()) + String("\nDistância: ") + String(deviceDistance, 4)).c_str()));
     publishScanResults(device.getName().c_str(), deviceDistance);
   }
 }
 
 double calculateDistanceFromRSSI(int deviceRSSI) {
   int n = 2;  // Variar n de 2 até 3,5 normalmente.
-  int referenceRSSI = -9;
-  float exp = (deviceRSSI - referenceRSSI) / (10 * n);
+  int referenceRSSI = -69;
+  double exp = (referenceRSSI - deviceRSSI) / (10.0 * n);
   return pow(10, exp);
 }
 
 void publishScanResults(int deviceCount) {
-  if (millis() - lastTimeChecked > publishBreak) {
-    clientMQTT.publish(topic, String("Não há dispositivos no alcance!").c_str(), true);
-  } else {
-    clientMQTT.publish(topic, String("Total de dispositivos no alcance: " + deviceCount).c_str(), true);
-  }
+  // if (millis() - lastTimeChecked > publishBreak) {
+  //   clientMQTT.publish(topic, String("Não há dispositivos no alcance!").c_str(), true);
+  // } else {
+    clientMQTT.publish(topic, String("Total de dispositivos no alcance: " + String(deviceCount)).c_str(), true);
+  // }
 }
 
 void publishScanResults(const char* deviceName, double deviceDistance) {
-  if (millis() - lastTimeChecked > publishBreak) {
-    clientMQTT.publish(topic, String("Não há dispositivos no alcance!").c_str(), true);
-  } else {
-    clientMQTT.publish(topic, (String("Dispositivo: ") + String(deviceName) + String("\nDistância: ") + String(deviceDistance, 2)).c_str(), true);
-  }
+  // if (millis() - lastTimeChecked > publishBreak) {
+  //   clientMQTT.publish(topic, String("Não há dispositivos no alcance!").c_str(), true);
+  // } else {
+    clientMQTT.publish(topic, (String("Dispositivo: ") + String(deviceName) + String("\nDistância: ") + String(deviceDistance, 4)).c_str(), true);
+  // }
 } 
