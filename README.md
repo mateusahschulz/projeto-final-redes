@@ -44,4 +44,4 @@ Para realizar estas configurações é necessário:
   <li>Com o MQTTX instalado, criar uma nova conexão, com nome de sua escolha, guardar a informação do ClientID e trocar a variável ClientID no código-fonte por essa informação. Por fim, colocar o mesmo IP configurado no código-fonte no host.</li>
   <li>Após a conexão estar criada e conectada, adicionar uma nova inscrição com o tópico definido na variável "topic" no código-fonte.</li>
 </ol>
-<p>Com todas essas configurações feitas, é possível executar o programa no Arduíno IDE e analisar os resultados no MQTTX.</p>
+Com todas essas configurações feitas, é possível executar o programa no Arduíno IDE e analisar os resultados no MQTTX.
