@@ -47,4 +47,5 @@ Para realizar estas configurações é necessário:
     <li>Após a conexão estar criada e conectada, adicionar uma nova inscrição com o tópico definido na variável "topic" no código-fonte.
     </li>
 </ol>
+<br />
 Com todas essas configurações feitas, é possível executar o programa no Arduíno IDE e analisar os resultados no MQTTX.
